@@ -1,1 +1,1 @@
-# Kirna-store
+# Kirana-store
