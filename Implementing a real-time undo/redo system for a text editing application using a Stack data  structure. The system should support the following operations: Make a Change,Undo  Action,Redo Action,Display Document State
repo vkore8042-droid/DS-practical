@@ -1,23 +1,65 @@
-doc = []
-redo = []
-
-while True:
-    print("\n1.Make Change 2.Undo 3.Redo 4.Display 5.Exit")
-    ch = input("Choice: ")
-    if ch == '1':
-        doc.append(input("Enter text: "))
-        redo.clear()
-    elif ch == '2':
-        if doc:
-            redo.append(doc.pop())
-        else:
-            print("Nothing to undo")
-    elif ch == '3':
-        if redo:
-            doc.append(redo.pop())
-        else:
-            print("Nothing to redo")
-    elif ch == '4':
-        print("Document:", " ".join(doc))
-    elif ch == '5':
-        break
+document = "" 
+ 
+undo_stack = [] 
+redo_stack = [] 
+ 
+while True: 
+ 
+    print("\n--- UNDO REDO MENU ---") 
+    print("1. Make Change") 
+    print("2. Undo") 
+    print("3. Redo") 
+    print("4. Display") 
+    print("5. Exit") 
+ 
+    ch = int(input("Enter choice: ")) 
+ 
+    if ch == 1: 
+ 
+        undo_stack.append(document) 
+ 
+        text = input("Enter text: ") 
+ 
+        document = document + text 
+ 
+        redo_stack.clear() 
+ 
+        print("Change saved successfully") 
+ 
+    elif ch == 2: 
+ 
+        if len(undo_stack) > 0: 
+ 
+            redo_stack.append(document) 
+ 
+            document = undo_stack.pop() 
+ 
+            print("Undo successful") 
+ 
+        else: 
+            print("Nothing to undo") 
+ 
+    elif ch == 3: 
+ 
+        if len(redo_stack) > 0: 
+ 
+            undo_stack.append(document) 
+ 
+            document = redo_stack.pop() 
+ 
+            print("Redo successful") 
+ 
+        else: 
+            print("Nothing to redo") 
+ 
+    elif ch == 4: 
+ 
+        print("Current Document:", document) 
+ 
+    elif ch == 5: 
+ 
+        print("Program terminated") 
+        break 
+ 
+    else: 
+        print("Invalid choice")
