@@ -1,78 +1,115 @@
 #include <stdio.h>
 #define SIZE 10
-
+#define EMPTY -1
+#define DELETED -2
 int table[SIZE];
-
-void insert(int key) {
+// Initialize hash table
+void initialize() {
     int i;
     for (i = 0; i < SIZE; i++) {
-        int p = (key % SIZE + i) % SIZE;
-        if (table[p] < 0) {
-            table[p] = key;
-            printf("Inserted at index %d\n", p);
+        table[i] = EMPTY;
+    }
+}
+// Insert operation
+void insert(int key) {
+    int index = key % SIZE;
+    int i, pos;
+    for (i = 0; i < SIZE; i++) {
+        pos = (index + i) % SIZE;
+        if (table[pos] == key) {
+            printf("Key already exists\n");
+            return;
+        }
+        if (table[pos] == EMPTY || table[pos] == DELETED) {
+            table[pos] = key;
+            printf("Inserted successfully\n");
             return;
         }
     }
-    printf("Table full\n");
+    printf("Hash table is full\n");
 }
-
-int find(int key) {
-    int i;
-    for (i = 0; i < SIZE; i++) {
-        int p = (key % SIZE + i) % SIZE;
-        if (table[p] == -1)
-            return -1;
-        if (table[p] == key)
-            return p;
-    }
-    return -1;
-}
-
+// Search operation
 void search(int key) {
-    int p = find(key);
-    if (p == -1)
-        printf("Not found\n");
-    else
-        printf("Found at index %d\n", p);
+    int index = key % SIZE;
+    int i, pos;
+    for (i = 0; i < SIZE; i++) {
+        pos = (index + i) % SIZE;
+        if (table[pos] == EMPTY)
+            break;
+        if (table[pos] == key) {
+            printf("Key found at index %d\n", pos);
+            return;
+        }
+    }
+    printf("Key not found\n");
 }
-
-void del(int key) {
-    int p = find(key);
-    if (p == -1)
-        printf("Not found\n");
-    else {
-        table[p] = -2;
-        printf("Deleted\n");
+// Delete operation
+void deleteKey(int key) {
+    int index = key % SIZE;
+    int i, pos;
+    for (i = 0; i < SIZE; i++) {
+        pos = (index + i) % SIZE;
+        if (table[pos] == EMPTY)
+            break;
+        if (table[pos] == key) {
+            table[pos] = DELETED;
+            printf("Deleted successfully\n");
+            return;
+        }
     }
 }
-
+    printf("Key not found\n");
+// Display operation
 void display() {
     int i;
     for (i = 0; i < SIZE; i++) {
-        if (table[i] < 0)
-            printf("%d: empty\n", i);
+        printf("%d : ", i);
+        if (table[i] == EMPTY)
+            printf("EMPTY");
+        else if (table[i] == DELETED)
+            printf("DELETED");
         else
-            printf("%d: %d\n", i, table[i]);
+            printf("%d", table[i]);
+        printf("\n");
     }
 }
-
+// Main function
 int main() {
-    int ch, key, i;
-    for (i = 0; i < SIZE; i++)
-        table[i] = -1;
+    int ch, key;
+    initialize();
     while (1) {
-        printf("\n1.Insert 2.Search 3.Delete 4.Display 5.Exit\nChoice: ");
+        printf("\n--- LINEAR PROBING ---\n");
+        printf("1. Insert\n");
+        printf("2. Search\n");
+        printf("3. Delete\n");
+        printf("4. Display\n");
+        printf("5. Exit\n");
+        printf("Enter choice: ");
         scanf("%d", &ch);
-        if (ch == 5)
-            break;
-        if (ch >= 1 && ch <= 3) {
-            printf("Key: ");
-            scanf("%d", &key);
+        switch (ch) {
+            case 1:
+                printf("Enter key: ");
+                scanf("%d", &key);
+                insert(key);
+                break;
+            case 2:
+                printf("Enter key: ");
+                scanf("%d", &key);
+                search(key);
+                break;
+            case 3:
+                printf("Enter key: ");
+                scanf("%d", &key);
+                deleteKey(key);
+                break;
+            case 4:
+                display();
+                break;
+            case 5:
+                return 0;
+            default:
+                printf("Invalid choice\n");
         }
-        if (ch == 1) insert(key);
-        else if (ch == 2) search(key);
-        else if (ch == 3) del(key);
-        else if (ch == 4) display();
     }
     return 0;
 }
