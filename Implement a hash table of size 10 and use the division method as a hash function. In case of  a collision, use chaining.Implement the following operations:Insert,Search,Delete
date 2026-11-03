@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int key;
+    struct node *next;
+};
+struct node *table[10];
+
+void insert(int key) {
+    int i = key % 10;
+    struct node *n = malloc(sizeof(struct node));
+    n->key = key;
+    n->next = table[i];
+    table[i] = n;
+}
+
+void search(int key) {
+    struct node *t = table[key % 10];
+    while (t != NULL) {
+        if (t->key == key) {
+            printf("Found at index %d\n", key % 10);
+            return;
+        }
+        t = t->next;
+    }
+    printf("Not found\n");
+}
+
+void del(int key) {
+    int i = key % 10;
+    struct node *t = table[i], *prev = NULL;
+    while (t != NULL && t->key != key) {
+        prev = t;
+        t = t->next;
+    }
+    if (t == NULL) {
+        printf("Not found\n");
+        return;
+    }
+    if (prev == NULL)
+        table[i] = t->next;
+    else
+        prev->next = t->next;
+    free(t);
+    printf("Deleted\n");
+}
+
+void display() {
+    int i;
+    struct node *t;
+    for (i = 0; i < 10; i++) {
+        printf("%d: ", i);
+        for (t = table[i]; t != NULL; t = t->next)
+            printf("%d -> ", t->key);
+        printf("NULL\n");
+    }
+}
+
+int main() {
+    int ch, key;
+    while (1) {
+        printf("\n1.Insert 2.Search 3.Delete 4.Display 5.Exit\nChoice: ");
+        scanf("%d", &ch);
+        if (ch == 5)
+            break;
+        if (ch >= 1 && ch <= 3) {
+            printf("Key: ");
+            scanf("%d", &key);
+        }
+        if (ch == 1) insert(key);
+        else if (ch == 2) search(key);
+        else if (ch == 3) del(key);
+        else if (ch == 4) display();
+    }
+    return 0;
+}
