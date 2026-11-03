@@ -1,77 +1,122 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-struct node {
+#define SIZE 10
+struct Node {
     int key;
-    struct node *next;
+    int value;
+    struct Node *next;
 };
-struct node *table[10];
-
-void insert(int key) {
-    int i = key % 10;
-    struct node *n = malloc(sizeof(struct node));
-    n->key = key;
-    n->next = table[i];
-    table[i] = n;
-}
-
-void search(int key) {
-    struct node *t = table[key % 10];
-    while (t != NULL) {
-        if (t->key == key) {
-            printf("Found at index %d\n", key % 10);
+struct Node *table[SIZE] = {NULL};
+// Insert operation
+void insert(int key, int value) {
+    int index = key % SIZE;
+    struct Node *temp = table[index];
+    while (temp != NULL) {
+        if (temp->key == key) {
+            temp->value = value;
+            printf("Key updated successfully\n");
             return;
         }
-        t = t->next;
+        temp = temp->next;
     }
-    printf("Not found\n");
-}
-
-void del(int key) {
-    int i = key % 10;
-    struct node *t = table[i], *prev = NULL;
-    while (t != NULL && t->key != key) {
-        prev = t;
-        t = t->next;
-    }
-    if (t == NULL) {
-        printf("Not found\n");
+    struct Node *newNode;
+    newNode = (struct Node *)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed\n");
         return;
     }
-    if (prev == NULL)
-        table[i] = t->next;
-    else
-        prev->next = t->next;
-    free(t);
-    printf("Deleted\n");
+    newNode->key = key;
+    newNode->value = value;
+    newNode->next = table[index];
+    table[index] = newNode;
+    printf("Inserted successfully\n");
 }
-
+// Search operation
+void search(int key) {
+    int index = key % SIZE;
+    struct Node *temp = table[index];
+    while (temp != NULL) {
+        if (temp->key == key) {
+            printf("Key found\n");
+            printf("Value = %d\n", temp->value);
+            return;
+        }
+        temp = temp->next;
+    }
+    printf("Key not found\n");
+}
+// Delete operation
+void deleteKey(int key) {
+    int index = key % SIZE;
+    struct Node *temp = table[index];
+    struct Node *prev = NULL;
+    while (temp != NULL) {
+        if (temp->key == key) {
+            if (prev == NULL)
+                table[index] = temp->next;
+            else
+                prev->next = temp->next;
+            free(temp);
+            printf("Deleted successfully\n");
+            return;
+        }
+        prev = temp;
+        temp = temp->next;
+    }
+    printf("Key not found\n");
+}
+// Display operation
 void display() {
     int i;
-    struct node *t;
-    for (i = 0; i < 10; i++) {
-        printf("%d: ", i);
-        for (t = table[i]; t != NULL; t = t->next)
-            printf("%d -> ", t->key);
+    struct Node *temp;
+    for (i = 0; i < SIZE; i++) {
+        printf("%d : ", i);
+        temp = table[i];
+        while (temp != NULL) {
+            printf("(%d,%d) -> ", temp->key, temp->value);
+            temp = temp->next;
+        }
         printf("NULL\n");
     }
 }
-
+// Main function
 int main() {
-    int ch, key;
+    int ch, key, value;
     while (1) {
-        printf("\n1.Insert 2.Search 3.Delete 4.Display 5.Exit\nChoice: ");
+        printf("\n--- HASH TABLE CHAINING ---\n");
+        printf("1. Insert\n");
+        printf("2. Search\n");
+        printf("3. Delete\n");
+        printf("4. Display\n");
+        printf("5. Exit\n");
+        printf("Enter choice: ");
         scanf("%d", &ch);
-        if (ch == 5)
-            break;
-        if (ch >= 1 && ch <= 3) {
-            printf("Key: ");
-            scanf("%d", &key);
+        switch (ch) {
+            case 1:
+                printf("Enter key: ");
+                scanf("%d", &key);
+                printf("Enter value: ");
+                scanf("%d", &value);
+                insert(key, value);
+                break;
+            case 2:
+                printf("Enter key: ");
+                scanf("%d", &key);
+                search(key);
+                break;
+            case 3:
+                printf("Enter key: ");
+                scanf("%d", &key);
+                deleteKey(key);
+                break;
+            case 4:
+                display();
+                break;
+            case 5:
+                return 0;
+            default:
+                printf("Invalid choice\n");
         }
-        if (ch == 1) insert(key);
-        else if (ch == 2) search(key);
-        else if (ch == 3) del(key);
-        else if (ch == 4) display();
     }
     return 0;
 }
