@@ -1,24 +1,59 @@
-from collections import deque
-
-queue = deque()
-
-while True:
-    print("\n1.Add Event 2.Process Next 3.Display Pending 4.Cancel Event 5.Exit")
-    ch = input("Choice: ")
-    if ch == '1':
-        queue.append(input("Event name: "))
-    elif ch == '2':
-        if queue:
-            print("Processed:", queue.popleft())
-        else:
-            print("No events")
-    elif ch == '3':
-        print("Pending:", list(queue))
-    elif ch == '4':
-        name = input("Event to cancel: ")
-        if name in queue:
-            queue.remove(name)
-        else:
-            print("Event not found")
-    elif ch == '5':
-        break
+queue = [] 
+ 
+while True: 
+ 
+    print("\n--- EVENT PROCESSING MENU ---") 
+    print("1. Add Event") 
+    print("2. Process Next Event") 
+    print("3. Display Pending Events") 
+    print("4. Cancel Event") 
+    print("5. Exit") 
+ 
+    ch = int(input("Enter choice: ")) 
+ 
+    if ch == 1: 
+ 
+        event = input("Enter event name: ") 
+ 
+        queue.append(event) 
+ 
+        print("Event added successfully") 
+ 
+    elif ch == 2: 
+ 
+        if len(queue) > 0: 
+ 
+            event = queue.pop(0) 
+ 
+            print("Processing Event:", event) 
+ 
+        else: 
+            print("Queue is empty") 
+ 
+    elif ch == 3: 
+ 
+        if queue: 
+            print("Pending Events:", queue) 
+        else: 
+            print("No pending events") 
+ 
+    elif ch == 4: 
+ 
+        event = input("Enter event to cancel: ") 
+ 
+        if event in queue: 
+ 
+            queue.remove(event) 
+ 
+            print("Event cancelled successfully") 
+ 
+        else: 
+            print("Event not found") 
+ 
+    elif ch == 5: 
+ 
+        print("Program terminated") 
+        break 
+ 
+    else: 
+        print("Invalid choice")
