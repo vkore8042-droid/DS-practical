@@ -1,0 +1,78 @@
+#include <stdio.h>
+#define SIZE 10
+
+int table[SIZE];
+
+void insert(int key) {
+    int i;
+    for (i = 0; i < SIZE; i++) {
+        int p = (key % SIZE + i) % SIZE;
+        if (table[p] < 0) {
+            table[p] = key;
+            printf("Inserted at index %d\n", p);
+            return;
+        }
+    }
+    printf("Table full\n");
+}
+
+int find(int key) {
+    int i;
+    for (i = 0; i < SIZE; i++) {
+        int p = (key % SIZE + i) % SIZE;
+        if (table[p] == -1)
+            return -1;
+        if (table[p] == key)
+            return p;
+    }
+    return -1;
+}
+
+void search(int key) {
+    int p = find(key);
+    if (p == -1)
+        printf("Not found\n");
+    else
+        printf("Found at index %d\n", p);
+}
+
+void del(int key) {
+    int p = find(key);
+    if (p == -1)
+        printf("Not found\n");
+    else {
+        table[p] = -2;
+        printf("Deleted\n");
+    }
+}
+
+void display() {
+    int i;
+    for (i = 0; i < SIZE; i++) {
+        if (table[i] < 0)
+            printf("%d: empty\n", i);
+        else
+            printf("%d: %d\n", i, table[i]);
+    }
+}
+
+int main() {
+    int ch, key, i;
+    for (i = 0; i < SIZE; i++)
+        table[i] = -1;
+    while (1) {
+        printf("\n1.Insert 2.Search 3.Delete 4.Display 5.Exit\nChoice: ");
+        scanf("%d", &ch);
+        if (ch == 5)
+            break;
+        if (ch >= 1 && ch <= 3) {
+            printf("Key: ");
+            scanf("%d", &key);
+        }
+        if (ch == 1) insert(key);
+        else if (ch == 2) search(key);
+        else if (ch == 3) del(key);
+        else if (ch == 4) display();
+    }
+    return 0;
+}
