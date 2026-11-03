@@ -1,0 +1,29 @@
+ids = list(map(int, input("Enter account IDs: ").split()))
+
+while True:
+    print("\n1.Linear Search 2.Binary Search 3.Exit")
+    ch = input("Choice: ")
+    if ch == '3':
+        break
+    key = int(input("Enter ID to search: "))
+    found = -1
+    if ch == '1':
+        for i in range(len(ids)):
+            if ids[i] == key:
+                found = i
+    elif ch == '2':
+        ids.sort()
+        low, high = 0, len(ids) - 1
+        while low <= high:
+            mid = (low + high) // 2
+            if ids[mid] == key:
+                found = mid
+                break
+            elif ids[mid] < key:
+                low = mid + 1
+            else:
+                high = mid - 1
+    if found == -1:
+        print("Not found")
+    else:
+        print("Found at index", found)
