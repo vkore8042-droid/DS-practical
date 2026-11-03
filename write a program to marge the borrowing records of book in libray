@@ -1,0 +1,29 @@
+books = []
+
+while True:
+    print("\n1.Add Book 2.Borrow 3.Return 4.Display 5.Exit")
+    ch = input("Choice: ")
+    if ch == '1':
+        bid = input("Book ID: ")
+        title = input("Title: ")
+        books.append({'id': bid, 'title': title, 'borrower': None})
+    elif ch == '2':
+        bid = input("Book ID to borrow: ")
+        for b in books:
+            if b['id'] == bid:
+                if b['borrower']:
+                    print("Already borrowed")
+                else:
+                    b['borrower'] = input("Borrower name: ")
+                    print("Book issued")
+    elif ch == '3':
+        bid = input("Book ID to return: ")
+        for b in books:
+            if b['id'] == bid:
+                b['borrower'] = None
+                print("Book returned")
+    elif ch == '4':
+        for b in books:
+            print(b['id'], b['title'], b['borrower'] or "Available")
+    elif ch == '5':
+        break
